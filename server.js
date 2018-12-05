@@ -13,9 +13,6 @@ app.use(cors())
 app.get('/', (req, res) =>
   res.send('<h1>listening to the port Simon localHost</h1>'))
 
-app.get('*', (req, res)=>
-  res.send('<img src="https://http.cat/404" />'))
-
 app.get('/location', (req, res)=>{
   const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${req.query.address}&key=${process.env.GOOGLE_API_KEY}`
   superagent.get(url)
@@ -28,6 +25,10 @@ app.get('/location', (req, res)=>{
 
     .catch(err => res.send(err))
 })
+
+app.get('*', (req, res)=>
+  res.send('<img src="https://http.cat/404" />'))
+
 app.get('/', (req, res)=>{
   res.send('this is home route')
 })
