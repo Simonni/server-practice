@@ -10,20 +10,24 @@ require('dotenv').config()
 const mongoURL = `mongodb://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@ds147872.mlab.com:47872/md301`
 
 mongoose.connect(mongoURL)
+
 const db = mongoose.connection
 
 db.on('error', console.error.bind(console, 'connection error:'))
+
 db.once('open', () => {
   console.log('DB connection open!')
 })
 
-const port = process.env.port ||3000
 const app = express()
+const port = process.env.port ||3000
+
 
 app.use(cors())
 
-app.get('/', (req, res) =>
-  res.send('<h1>listening to the port Simon localHost</h1>'))
+
+// app.get('/', (req, res) =>
+//   res.send('<h1>listening to the port Simon localHost</h1>'))
 
 app.get('/location', (req, res)=>{
   const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${req.query.address}&key=${process.env.GOOGLE_API_KEY}`
@@ -34,7 +38,7 @@ app.get('/location', (req, res)=>{
     } else {
       superagent.get(url)
         .then(result => {
-          const newLocation = new location({address:req.query.address,
+          const newLocation = new Location({address:req.query.address,
             lng: result.body.results[0].geometry.location.lng,
             lat: result.body.results[0].geometry.location.lat 
           })
@@ -55,12 +59,7 @@ app.listen(port, ()=>{
   console.log(`Listening to port ${port}`)
 })
 
-const Location = function(loc){
-  this.lat = loc.body.results[0].geometry.location.lat
-  this.lng = loc.body.results[0].geometry.location.lng
-}
-
-const LocationSchema = new Schema({
+const LocationSchema = new mongoose.Schema({
   address: String,
   lat: Number,
   lng: Number
