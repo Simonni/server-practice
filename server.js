@@ -59,7 +59,7 @@ app.listen(port, ()=>{
   console.log(`Listening to port ${port}`)
 })
 
-const LocationSchema = new mongoose.Schema({
+const LocationSchema = new Schema({
   address: String,
   lat: Number,
   lng: Number
