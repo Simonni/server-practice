@@ -6,7 +6,7 @@ const superagent = require('superagent')
 require('dotenv').config()
 const port = process.env.port ||3000
 const app = express()
-process.env.port || 3000
+
 
 app.use(cors())
 
@@ -18,9 +18,6 @@ app.get('/location', (req, res)=>{
   superagent.get(url)
     .then(result => {
       res.send(new Location(result))
-      { lng: result.body.results[0].geometry.location.lng
-        lat: result.body.results[0].geometry.location.lat
-      }
     })
 
     .catch(err => res.send(err))
@@ -29,15 +26,10 @@ app.get('/location', (req, res)=>{
 app.get('*', (req, res)=>
   res.send('<img src="https://http.cat/404" />'))
 
-app.get('/', (req, res)=>{
-  res.send('this is home route')
-})
-
-app.use('*', (req, res)=>
-  res.send('Something broke'))
 app.listen(port, ()=>{
   console.log(`Listening to port ${port}`)
 })
+
 const Location = function(loc){
   this.lat = loc.body.results[0].geometry.location.lat
   this.lng = loc.body.results[0].geometry.location.lng
