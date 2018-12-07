@@ -42,8 +42,7 @@ app.get('/location', (req, res)=>{
         .then(result => {
           const newLocation = new Location({address:req.query.address,
             lng: result.body.results[0].geometry.location.lng,
-            lat: result.body.results[0].geometry.location.lat 
-          })
+            lat: result.body.results[0].geometry.location.lat})
           newLocation.save()
           console.log('created new address')
           res.send(newLocation)
@@ -72,7 +71,7 @@ const Location = model('Location', LocationSchema)
 const weatherConstructor = function(weather){
   this.temp = weather.body.currently.temperature,
   this.icon = weather.body.currently.icon,
-  this.humidity = weather.body.data[0].humidity  
+  this.humidity = weather.body.data[0].humidity
 }
 function weatherController(req, res){
   const url = `https://api.darksky.net/forecast/${process.env.darsky_api_key}/${req.query.lat},${req.query.lng}`
