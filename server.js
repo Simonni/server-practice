@@ -25,6 +25,8 @@ const port = process.env.port ||3000
 
 app.use(cors())
 
+app.get('/weather', weatherController)
+
 
 // app.get('/', (req, res) =>
 //   res.send('<h1>listening to the port Simon localHost</h1>'))
@@ -66,3 +68,17 @@ const LocationSchema = new Schema({
 })
 
 const Location = model('Location', LocationSchema)
+
+const weatherConstructor = function(weather){
+  this.temp = weather.body.currently.temperature,
+  this.icon = weather.body.currently.icon,
+  this.humidity = weather.body.data[0].humidity  
+}
+function weatherController(req, res){
+  const url = `https://api.darksky.net/forecast/${process.env.darsky_api_key}/${req.query.lat},${req.query.lng}`
+  superagent.get(url)
+    .then(result=>{
+      const newWeather = new weatherConstructor(result)
+      res.sent(newWeather)
+    })
+}
